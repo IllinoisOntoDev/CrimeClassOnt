@@ -1,0 +1,216 @@
+@prefix : <http://purl.org/lis590OD/Fall17/CrimeChargeOnt#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix tl: <http://purl.org/NET/c4dm/timeline.owl#> .
+@prefix dbp: <http://dbpedia.org/resource/> .
+@prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix org: <http://www.w3.org/ns/org#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix xsp: <http://www.owl-ontologies.com/2005/08/07/xsp.owl#> .
+@prefix doco: <https://svn.code.sf.net/p/sempublishing/code/DoCO/doco.owl> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix swrl: <http://www.w3.org/2003/11/swrl#> .
+@prefix wped: <http://en.wikipedia.org/wiki/> .
+@prefix dolce: <http://ontology.ip.rm.cnr.it/ontologies/DOLCE-Lite#> .
+@prefix event: <http://purl.org/NET/c4dm/event.owl#> .
+@prefix swrlb: <http://www.w3.org/2003/11/swrlb#> .
+@prefix orgrel: <http://purl.org/lis590od/Fall17/OrgRel> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix protege: <http://protege.stanford.edu/plugins/owl/protege#> .
+@prefix lkifnorm: <http://www.estrellaproject.org/lkif-core/norm.owl#> .
+@prefix lkiflaction: <http://www.estrellaproject.org/lkif-core/action.owl#> .
+@prefix lkifexpression: <http://www.estrellaproject.org/lkif-core/expression.owl#> .
+@base <http://purl.org/lis590OD/Fall17/CrimeChargeOnt> .
+
+<http://purl.org/lis590OD/Fall17/CrimeChargeOnt> rdf:type owl:Ontology .
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Supports
+:Supports rdf:type owl:ObjectProperty ;
+          owl:inverseOf :isSupportedBy ;
+          rdfs:domain lkifexpression:Evidence ;
+          rdfs:range :ChargingDocument .
+
+
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#hasArtifact
+:hasArtifact rdf:type owl:ObjectProperty .
+
+
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#isSupportedBy
+:isSupportedBy rdf:type owl:ObjectProperty ;
+               rdfs:domain :ChargingDocument ;
+               rdfs:range lkifexpression:Evidence .
+
+
+###  http://www.essepuntato.it/2008/12/pattern#contains
+<http://www.essepuntato.it/2008/12/pattern#contains> rdf:type owl:ObjectProperty ;
+                                                     owl:inverseOf <http://www.essepuntato.it/2008/12/pattern#isContainedBy> ;
+                                                     rdfs:domain lkifnorm:Code ,
+                                                                 lkifnorm:Statute ;
+                                                     rdfs:range :CrimeClass ,
+                                                                lkifnorm:Statute .
+
+
+###  http://www.essepuntato.it/2008/12/pattern#isContainedBy
+<http://www.essepuntato.it/2008/12/pattern#isContainedBy> rdf:type owl:ObjectProperty ;
+                                                          rdfs:domain lkifnorm:Statute ;
+                                                          rdfs:range lkifnorm:Code .
+
+
+###  http://xmlns.com/foaf/0.1/focus
+foaf:focus rdf:type owl:ObjectProperty .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://purl.org/NET/c4dm/event.owl#Event
+event:Event rdf:type owl:Class .
+
+
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#AllegedCharge
+:AllegedCharge rdf:type owl:Class ;
+               rdfs:subClassOf lkiflaction:Action .
+
+
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#ArrestRecord
+:ArrestRecord rdf:type owl:Class ;
+              rdfs:subClassOf lkifexpression:Evidence .
+
+
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#ArrestingOfficer
+:ArrestingOfficer rdf:type owl:Class ;
+                  rdfs:subClassOf foaf:Person .
+
+
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#ArrestingOfficerInfo
+:ArrestingOfficerInfo rdf:type owl:Class ;
+                      rdfs:subClassOf <http://purl.org/spar/doco/TextChunk> .
+
+
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Booking
+:Booking rdf:type owl:Class ;
+         rdfs:subClassOf event:Event .
+
+
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#ChargingDocument
+:ChargingDocument rdf:type owl:Class ;
+                  rdfs:subClassOf lkifnorm:Legal_Document .
+
+
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#CrimeClass
+:CrimeClass rdf:type owl:Class .
+
+
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#CrimeCode
+:CrimeCode rdf:type owl:Class ;
+           rdfs:subClassOf <http://purl.org/spar/doco/TextChunk> .
+
+
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Offender
+:Offender rdf:type owl:Class ;
+          rdfs:subClassOf foaf:Person .
+
+
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#OffenderInfo
+:OffenderInfo rdf:type owl:Class ;
+              rdfs:subClassOf <http://purl.org/spar/doco/TextChunk> .
+
+
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#PoliceReport
+:PoliceReport rdf:type owl:Class ;
+              rdfs:subClassOf lkiflaction:Artifact ,
+                              lkifexpression:Evidence .
+
+
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Victim
+:Victim rdf:type owl:Class ;
+        rdfs:subClassOf foaf:Person .
+
+
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#VictimInfo
+:VictimInfo rdf:type owl:Class ;
+            rdfs:subClassOf <http://purl.org/spar/doco/TextChunk> .
+
+
+###  http://purl.org/spar/doco/TextChunk
+<http://purl.org/spar/doco/TextChunk> rdf:type owl:Class .
+
+
+###  http://www.estrellaproject.org/lkif-core/action.owl#Action
+lkiflaction:Action rdf:type owl:Class .
+
+
+###  http://www.estrellaproject.org/lkif-core/action.owl#Artifact
+lkiflaction:Artifact rdf:type owl:Class .
+
+
+###  http://www.estrellaproject.org/lkif-core/expression.owl#Evidence
+lkifexpression:Evidence rdf:type owl:Class .
+
+
+###  http://www.estrellaproject.org/lkif-core/norm.owl#Code
+lkifnorm:Code rdf:type owl:Class ;
+              rdfs:subClassOf lkifnorm:Legal_Document .
+
+
+###  http://www.estrellaproject.org/lkif-core/norm.owl#Legal_Document
+lkifnorm:Legal_Document rdf:type owl:Class .
+
+
+###  http://www.estrellaproject.org/lkif-core/norm.owl#Statute
+lkifnorm:Statute rdf:type owl:Class ;
+                 rdfs:subClassOf lkifnorm:Legal_Document .
+
+
+###  http://xmlns.com/foaf/0.1/Person
+foaf:Person rdf:type owl:Class .
+
+
+#################################################################
+#    Individuals
+#################################################################
+
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#ArrestRecord
+:ArrestRecord rdf:type owl:NamedIndividual .
+
+
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Felony
+:Felony rdf:type owl:NamedIndividual ,
+                 :CrimeClass .
+
+
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Infraction
+:Infraction rdf:type owl:NamedIndividual ,
+                     :CrimeClass .
+
+
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Misdemeanor
+:Misdemeanor rdf:type owl:NamedIndividual ,
+                      :CrimeClass .
+
+
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Ordnance
+:Ordnance rdf:type owl:NamedIndividual ,
+                   :CrimeClass .
+
+
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#PoliceReport
+:PoliceReport rdf:type owl:NamedIndividual .
+
+
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Wobbler
+:Wobbler rdf:type owl:NamedIndividual ,
+                  :CrimeClass .
+
+
+###  Generated by the OWL API (version 4.2.8.20170104-2310) https://github.com/owlcs/owlapi
