@@ -55,7 +55,7 @@
                                                      owl:inverseOf <http://www.essepuntato.it/2008/12/pattern#isContainedBy> ;
                                                      rdfs:domain lkifnorm:Code ,
                                                                  lkifnorm:Statute ;
-                                                     rdfs:range :CrimeClass ,
+                                                     rdfs:range :CrimeClassification ,
                                                                 lkifnorm:Statute .
 
 
@@ -65,26 +65,30 @@
                                                           rdfs:range lkifnorm:Code .
 
 
+###  http://www.w3.org/2004/02/skos/core#related
+skos:related rdf:type owl:ObjectProperty .
+
+
 ###  http://xmlns.com/foaf/0.1/focus
 foaf:focus rdf:type owl:ObjectProperty .
+
+
+###  http://xmlns.com/foaf/0.1/topic
+foaf:topic rdf:type owl:ObjectProperty .
 
 
 #################################################################
 #    Classes
 #################################################################
 
-###  http://purl.org/NET/c4dm/event.owl#Event
-event:Event rdf:type owl:Class .
-
-
-###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#AllegedCharge
-:AllegedCharge rdf:type owl:Class ;
-               rdfs:subClassOf lkiflaction:Action .
-
-
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#ArrestRecord
 :ArrestRecord rdf:type owl:Class ;
               rdfs:subClassOf lkifexpression:Evidence .
+
+
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#ArrestingCharge
+:ArrestingCharge rdf:type owl:Class ;
+                 rdfs:subClassOf :Charge .
 
 
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#ArrestingOfficer
@@ -92,58 +96,57 @@ event:Event rdf:type owl:Class .
                   rdfs:subClassOf foaf:Person .
 
 
-###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#ArrestingOfficerInfo
-:ArrestingOfficerInfo rdf:type owl:Class ;
-                      rdfs:subClassOf <http://purl.org/spar/doco/TextChunk> .
-
-
-###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Booking
-:Booking rdf:type owl:Class ;
-         rdfs:subClassOf event:Event .
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Charge
+:Charge rdf:type owl:Class ;
+        rdfs:subClassOf lkiflaction:Action .
 
 
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#ChargingDocument
 :ChargingDocument rdf:type owl:Class ;
-                  rdfs:subClassOf lkifnorm:Legal_Document .
+                  rdfs:subClassOf lkiflaction:Artifact ,
+                                  lkifnorm:Legal_Document .
 
 
-###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#CrimeClass
-:CrimeClass rdf:type owl:Class .
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#ConvictingCharge
+:ConvictingCharge rdf:type owl:Class ;
+                  rdfs:subClassOf :Charge .
+
+
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#CrimeClassification
+:CrimeClassification rdf:type owl:Class .
 
 
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#CrimeCode
 :CrimeCode rdf:type owl:Class ;
-           rdfs:subClassOf <http://purl.org/spar/doco/TextChunk> .
+           rdfs:subClassOf lkifnorm:Legal_Document .
 
 
-###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Offender
-:Offender rdf:type owl:Class ;
-          rdfs:subClassOf foaf:Person .
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#CriminalRecord
+:CriminalRecord rdf:type owl:Class ;
+                rdfs:subClassOf lkifexpression:Evidence ,
+                                lkifnorm:Legal_Document .
 
 
-###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#OffenderInfo
-:OffenderInfo rdf:type owl:Class ;
-              rdfs:subClassOf <http://purl.org/spar/doco/TextChunk> .
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#FormalCharge
+:FormalCharge rdf:type owl:Class ;
+              rdfs:subClassOf :Charge .
+
+
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Judge
+:Judge rdf:type owl:Class ;
+       rdfs:subClassOf foaf:Person .
 
 
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#PoliceReport
 :PoliceReport rdf:type owl:Class ;
               rdfs:subClassOf lkiflaction:Artifact ,
-                              lkifexpression:Evidence .
+                              lkifexpression:Evidence ,
+                              lkifnorm:Legal_Document .
 
 
-###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Victim
-:Victim rdf:type owl:Class ;
-        rdfs:subClassOf foaf:Person .
-
-
-###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#VictimInfo
-:VictimInfo rdf:type owl:Class ;
-            rdfs:subClassOf <http://purl.org/spar/doco/TextChunk> .
-
-
-###  http://purl.org/spar/doco/TextChunk
-<http://purl.org/spar/doco/TextChunk> rdf:type owl:Class .
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Prosecutor
+:Prosecutor rdf:type owl:Class ;
+            rdfs:subClassOf foaf:Person .
 
 
 ###  http://www.estrellaproject.org/lkif-core/action.owl#Action
@@ -186,22 +189,22 @@ foaf:Person rdf:type owl:Class .
 
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Felony
 :Felony rdf:type owl:NamedIndividual ,
-                 :CrimeClass .
+                 :CrimeClassification .
 
 
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Infraction
 :Infraction rdf:type owl:NamedIndividual ,
-                     :CrimeClass .
+                     :CrimeClassification .
 
 
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Misdemeanor
 :Misdemeanor rdf:type owl:NamedIndividual ,
-                      :CrimeClass .
+                      :CrimeClassification .
 
 
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Ordnance
 :Ordnance rdf:type owl:NamedIndividual ,
-                   :CrimeClass .
+                   :CrimeClassification .
 
 
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#PoliceReport
@@ -210,7 +213,7 @@ foaf:Person rdf:type owl:Class .
 
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Wobbler
 :Wobbler rdf:type owl:NamedIndividual ,
-                  :CrimeClass .
+                  :CrimeClassification .
 
 
 ###  Generated by the OWL API (version 4.2.8.20170104-2310) https://github.com/owlcs/owlapi
