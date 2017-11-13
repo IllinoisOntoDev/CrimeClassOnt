@@ -37,13 +37,15 @@
 :Supports rdf:type owl:ObjectProperty ;
           owl:inverseOf :isSupportedBy ;
           rdfs:domain lkifexpression:Evidence ;
-          rdfs:range :ChargingDocument .
+          rdfs:range :ChargingDocument ;
+          rdfs:comment "Links a charging document with the legal evidence mentioned in the document."@en .
 
 
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#hasArtifact
 :hasArtifact rdf:type owl:ObjectProperty ;
              rdfs:domain lkiflaction:Action ;
-             rdfs:range lkifnorm:Legal_Document .
+             rdfs:range lkifnorm:Legal_Document ;
+             rdfs:comment "Connects an action with the physical artifact that is produced in the course of the action."@en .
 
 
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#isSupportedBy
@@ -58,7 +60,8 @@
                                                      rdfs:domain lkifnorm:Code ,
                                                                  lkifnorm:Statute ;
                                                      rdfs:range :CrimeClassification ,
-                                                                lkifnorm:Statute .
+                                                                lkifnorm:Statute ;
+                                                     rdfs:comment "From DOCO ontology: indicates part-whole relationships between different pieces of written information"@en .
 
 
 ###  http://www.essepuntato.it/2008/12/pattern#isContainedBy
@@ -68,13 +71,21 @@
 
 
 ###  http://www.w3.org/2004/02/skos/core#related
-skos:related rdf:type owl:ObjectProperty .
+skos:related rdf:type owl:ObjectProperty ;
+             rdfs:comment "From SKOS: enables the representation of associative (non-hierarchical) links, such as the relationship between one type of event and a category of entities which typically participate in it."@en .
 
 
 ###  http://xmlns.com/foaf/0.1/focus
 foaf:focus rdf:type owl:ObjectProperty ;
            rdfs:domain foaf:Person ;
-           rdfs:range foaf:Person .
+           rdfs:range foaf:Person ;
+           rdfs:comment """From FOAF:
+The underlying or 'focal' entity associated with some SKOS-described concept.
+Status: 	testing
+Domain: 	having this property implies being a Concept
+Range: 	every value of this property is a Thing
+
+The focus property relates a conceptualisation of something to the thing itself. Specifically, it is designed for use with W3C's SKOS vocabulary, to help indicate specific individual things (typically people, places, artifacts) that are mentioned in different SKOS schemes (eg. thesauri)."""@en .
 
 
 ###  http://xmlns.com/foaf/0.1/topic
