@@ -23,7 +23,9 @@
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix protege: <http://protege.stanford.edu/plugins/owl/protege#> .
 @prefix lkifnorm: <http://www.estrellaproject.org/lkif-core/norm.owl#> .
+@prefix lkifmereo: <http://www.estrellaproject.org/lkif-core/mereology.owl#> .
 @prefix lkiflaction: <http://www.estrellaproject.org/lkif-core/action.owl#> .
+@prefix lkiflegalrole: <http://www.estrellaproject.org/lkif-core/legal-role.owl#> .
 @prefix lkifexpression: <http://www.estrellaproject.org/lkif-core/expression.owl#> .
 @base <http://purl.org/lis590OD/Fall17/CrimeChargeOnt> .
 
@@ -33,12 +35,45 @@
 #    Object Properties
 #################################################################
 
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Charged
+:Charged rdf:type owl:ObjectProperty ;
+         owl:inverseOf :isChargedBy ;
+         rdfs:domain lkiflegalrole:Professional_Legal_Role ;
+         rdfs:range :Charged .
+
+
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Receives
+:Receives rdf:type owl:ObjectProperty ;
+          owl:inverseOf :hasRecipient ;
+          rdfs:domain :Charged ;
+          rdfs:range lkiflaction:Action .
+
+
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Supports
 :Supports rdf:type owl:ObjectProperty ;
           owl:inverseOf :isSupportedBy ;
           rdfs:domain lkifexpression:Evidence ;
-          rdfs:range :ChargingDocument ;
+          rdfs:range lkiflaction:Artifact ;
           rdfs:comment "Links a charging document with the legal evidence mentioned in the document."@en .
+
+
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#createdBy
+:createdBy rdf:type owl:ObjectProperty ;
+           owl:inverseOf :creates ;
+           rdfs:domain lkifnorm:Legal_Document ;
+           rdfs:range lkiflegalrole:Professional_Legal_Role ;
+           rdfs:comment "Links an author/creator of a document to the document the person has created."@en .
+
+
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#creates
+:creates rdf:type owl:ObjectProperty ;
+         rdfs:domain lkiflegalrole:Professional_Legal_Role ;
+         rdfs:range lkifnorm:Legal_Document .
+
+
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#hasActor
+:hasActor rdf:type owl:ObjectProperty ;
+          owl:inverseOf lkiflaction:actor .
 
 
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#hasArtifact
@@ -48,49 +83,61 @@
              rdfs:comment "Connects an action with the physical artifact that is produced in the course of the action."@en .
 
 
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#hasRecipient
+:hasRecipient rdf:type owl:ObjectProperty ;
+              rdfs:domain lkiflaction:Action ;
+              rdfs:range foaf:Person .
+
+
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#isChargedBy
+:isChargedBy rdf:type owl:ObjectProperty ;
+             rdfs:domain foaf:Person ;
+             rdfs:range lkiflegalrole:Professional_Legal_Role .
+
+
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#isSupportedBy
 :isSupportedBy rdf:type owl:ObjectProperty ;
-               rdfs:domain :ChargingDocument ;
+               rdfs:domain lkiflaction:Artifact ;
                rdfs:range lkifexpression:Evidence .
 
 
 ###  http://www.essepuntato.it/2008/12/pattern#contains
 <http://www.essepuntato.it/2008/12/pattern#contains> rdf:type owl:ObjectProperty ;
                                                      owl:inverseOf <http://www.essepuntato.it/2008/12/pattern#isContainedBy> ;
-                                                     rdfs:domain lkifnorm:Code ,
-                                                                 lkifnorm:Statute ;
-                                                     rdfs:range :CrimeClassification ,
-                                                                lkifnorm:Statute ;
-                                                     rdfs:comment "From DOCO ontology: indicates part-whole relationships between different pieces of written information"@en .
+                                                     rdfs:domain lkifnorm:Statute ;
+                                                     rdfs:range :CrimeClassification .
 
 
 ###  http://www.essepuntato.it/2008/12/pattern#isContainedBy
-<http://www.essepuntato.it/2008/12/pattern#isContainedBy> rdf:type owl:ObjectProperty ;
-                                                          rdfs:domain lkifnorm:Statute ;
-                                                          rdfs:range lkifnorm:Code .
+<http://www.essepuntato.it/2008/12/pattern#isContainedBy> rdf:type owl:ObjectProperty .
 
 
-###  http://www.w3.org/2004/02/skos/core#related
-skos:related rdf:type owl:ObjectProperty ;
-             rdfs:comment "From SKOS: enables the representation of associative (non-hierarchical) links, such as the relationship between one type of event and a category of entities which typically participate in it."@en .
+###  http://www.estrellaproject.org/lkif-core/action.owl#actor
+lkiflaction:actor rdf:type owl:ObjectProperty ;
+                  rdfs:domain lkiflegalrole:Professional_Legal_Role ;
+                  rdfs:range lkiflaction:Action ;
+                  rdfs:comment "Specifies that some participant is an actor in the action."@en ;
+                  rdfs:label "isActorIn"@en .
 
 
-###  http://xmlns.com/foaf/0.1/focus
-foaf:focus rdf:type owl:ObjectProperty ;
-           rdfs:domain foaf:Person ;
-           rdfs:range foaf:Person ;
-           rdfs:comment """From FOAF:
-The underlying or 'focal' entity associated with some SKOS-described concept.
-Status: 	testing
-Domain: 	having this property implies being a Concept
-Range: 	every value of this property is a Thing
+###  http://www.estrellaproject.org/lkif-core/mereology.owl#part
+lkifmereo:part rdf:type owl:ObjectProperty ;
+               owl:inverseOf lkifmereo:part_of ;
+               rdfs:label "hasPart"@en .
 
-The focus property relates a conceptualisation of something to the thing itself. Specifically, it is designed for use with W3C's SKOS vocabulary, to help indicate specific individual things (typically people, places, artifacts) that are mentioned in different SKOS schemes (eg. thesauri)."""@en .
+
+###  http://www.estrellaproject.org/lkif-core/mereology.owl#part_of
+lkifmereo:part_of rdf:type owl:ObjectProperty ;
+                  rdfs:domain lkifnorm:Legal_Document ;
+                  rdfs:range lkifnorm:Legal_Document ;
+                  rdfs:comment "From LKIF: Transitive part-of relation"@en .
 
 
 ###  http://xmlns.com/foaf/0.1/topic
 foaf:topic rdf:type owl:ObjectProperty ;
-           rdfs:domain lkifnorm:Legal_Document .
+           rdfs:domain lkifnorm:Legal_Document ;
+           rdfs:range owl:Thing ;
+           rdfs:comment "Connects a legal document with any significant content within the document."@en .
 
 
 #################################################################
@@ -99,138 +146,207 @@ foaf:topic rdf:type owl:ObjectProperty ;
 
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#ArrestingCharge
 :ArrestingCharge rdf:type owl:Class ;
-                 rdfs:subClassOf :Charge ;
+                 rdfs:subClassOf :Charge ,
+                                 [ rdf:type owl:Restriction ;
+                                   owl:onProperty :hasActor ;
+                                   owl:allValuesFrom :ArrestingOfficer
+                                 ] ;
                  rdfs:comment "A charge action made at the time of an arrest by the arresting officer. Written down in a police report or other record during booking."@en .
 
 
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#ArrestingOfficer
 :ArrestingOfficer rdf:type owl:Class ;
-                  rdfs:subClassOf foaf:Person ;
+                  rdfs:subClassOf lkiflegalrole:Professional_Legal_Role ;
                   rdfs:comment "An arresting officer is the police department representative who makes an arrest."@en .
 
 
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Charge
 :Charge rdf:type owl:Class ;
-        rdfs:subClassOf lkiflaction:Action ;
-        rdfs:comment "An accusation of crime, formulated in a written complaint, information, or indictment, and taking shape in a prosecution."@en .
+        rdfs:subClassOf lkiflaction:Action ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :hasArtifact ;
+                          owl:someValuesFrom lkiflaction:Artifact
+                        ] ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :hasActor ;
+                          owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                          owl:onClass lkiflegalrole:Professional_Legal_Role
+                        ] ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :hasRecipient ;
+                          owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                          owl:onClass :Charged
+                        ] ;
+        rdfs:comment "An accusation of crime."@en .
 
 
-###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#ChargingDocument
-:ChargingDocument rdf:type owl:Class ;
-                  rdfs:subClassOf lkiflaction:Artifact ,
-                                  lkifnorm:Legal_Document ;
-                  rdfs:comment "From NOLO: A charging document is a pleading that initiates criminal charges against a defendant. It—not arrest—signifies the commencement of a criminal case. Complaints, informations, and indictments are charging documents."@en .
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Charged
+:Charged rdf:type owl:Class ;
+         rdfs:subClassOf foaf:Person ,
+                         [ rdf:type owl:Restriction ;
+                           owl:onProperty :Receives ;
+                           owl:someValuesFrom :Charge
+                         ] ,
+                         [ rdf:type owl:Restriction ;
+                           owl:onProperty :isChargedBy ;
+                           owl:someValuesFrom lkiflegalrole:Professional_Legal_Role
+                         ] .
 
 
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#ConvictingCharge
 :ConvictingCharge rdf:type owl:Class ;
-                  rdfs:subClassOf :Charge ;
+                  rdfs:subClassOf :Charge ,
+                                  [ rdf:type owl:Restriction ;
+                                    owl:onProperty :hasActor ;
+                                    owl:allValuesFrom :Judge
+                                  ] ;
                   rdfs:comment "A charge action made at the time of a conviction by a judge."@en .
-
-
-###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Crime
-:Crime rdf:type owl:Class ;
-       rdfs:subClassOf skos:Concept ;
-       rdfs:comment "A violation of the law."@en .
 
 
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#CrimeClassification
 :CrimeClassification rdf:type owl:Class ;
+                     rdfs:subClassOf [ rdf:type owl:Restriction ;
+                                       owl:onProperty lkifmereo:part_of ;
+                                       owl:someValuesFrom lkifnorm:Statute
+                                     ] ;
                      rdfs:comment "Categorization of crimes into misdemeanors, felonies, infractions, and wobblers."@en .
 
 
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#CrimeCode
 :CrimeCode rdf:type owl:Class ;
-           rdfs:subClassOf lkifnorm:Legal_Document ;
+           rdfs:subClassOf lkifnorm:Legal_Document ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty lkifmereo:part_of ;
+                             owl:someValuesFrom lkifnorm:Statute
+                           ] ;
            rdfs:comment "A crime code is the criminal charge in a written form, typically the section title of a statute"@en .
-
-
-###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#CriminalRecord
-:CriminalRecord rdf:type owl:Class ;
-                rdfs:subClassOf lkifexpression:Evidence ,
-                                lkifnorm:Legal_Document ;
-                rdfs:comment "A criminal record is documentation of a person's criminal history, including arrests and convictions."@en .
 
 
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#FormalCharge
 :FormalCharge rdf:type owl:Class ;
-              rdfs:subClassOf :Charge ;
+              rdfs:subClassOf :Charge ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty :hasActor ;
+                                owl:allValuesFrom :Prosecutor
+                              ] ;
               rdfs:comment "A charge action made to start the proceedings of a criminal case. Written on a charging document typically by a prosecutor."@en .
 
 
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Judge
 :Judge rdf:type owl:Class ;
-       rdfs:subClassOf foaf:Person ;
+       rdfs:subClassOf lkiflegalrole:Professional_Legal_Role ;
        rdfs:comment "From NOLO: An official with the authority and responsibility to preside in a court, try lawsuits, and make legal rulings."@en .
-
-
-###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#PoliceReport
-:PoliceReport rdf:type owl:Class ;
-              rdfs:subClassOf lkiflaction:Artifact ,
-                              lkifexpression:Evidence ,
-                              lkifnorm:Legal_Document .
 
 
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Prosecutor
 :Prosecutor rdf:type owl:Class ;
-            rdfs:subClassOf foaf:Person ;
+            rdfs:subClassOf lkiflegalrole:Professional_Legal_Role ;
             rdfs:comment "From NOLO: A lawyer who works for the local, state, or federal government to bring and litigate criminal cases."@en .
 
 
 ###  http://www.estrellaproject.org/lkif-core/action.owl#Action
 lkiflaction:Action rdf:type owl:Class ;
-                   rdfs:comment "From LKIF: An action is a change which is brought about by a single agent, playing a role. The agent is the holder of some indended outcome of the action: an action is always intentional. The intention of the agent has usually corresponds with an expectation the intended outcome to be brought about: the agent believes in some expectation. Note that the intention might not correspond with the *actual* outcome of the action."@en .
+                   rdfs:comment "From LKIF: An action is a change which is brought about by a single agent, playing a role. The agent is the holder of some indended outcome of the action: an action is always intentional. The intention of the agent has usually corresponds with an expectation the intended outcome to be brought about: the agent believes in some expectation. Note that the intention might not correspond with the *actual* outcome of the action."@en ;
+                   rdfs:label "Legal Action"@en .
 
 
 ###  http://www.estrellaproject.org/lkif-core/action.owl#Artifact
 lkiflaction:Artifact rdf:type owl:Class ;
-                     rdfs:comment "From LKIF: A physical object created by some person to fulfil a particular purpose."@en .
+                     rdfs:subClassOf lkifnorm:Legal_Document ,
+                                     [ rdf:type owl:Restriction ;
+                                       owl:onProperty :isSupportedBy ;
+                                       owl:someValuesFrom lkifexpression:Evidence
+                                     ] ,
+                                     [ rdf:type owl:Restriction ;
+                                       owl:onProperty foaf:topic ;
+                                       owl:someValuesFrom :Charged
+                                     ] ,
+                                     [ rdf:type owl:Restriction ;
+                                       owl:onProperty foaf:topic ;
+                                       owl:someValuesFrom lkifnorm:Statute
+                                     ] ;
+                     rdfs:comment """From LKIF: A physical object created by some person to fulfil a particular purpose.
+
+For this ontology, a charging artifact is always some sort of legal document/record that is generated when a charge is made."""@en ;
+                     rdfs:label "Charge Artifact"@en .
 
 
 ###  http://www.estrellaproject.org/lkif-core/expression.owl#Evidence
 lkifexpression:Evidence rdf:type owl:Class ;
+                        rdfs:subClassOf [ rdf:type owl:Restriction ;
+                                          owl:onProperty :Supports ;
+                                          owl:someValuesFrom lkiflaction:Artifact
+                                        ] ;
                         rdfs:comment "From LKIF: Observation and/or statement, used as a backing for a belief."@en ;
                         rdfs:label "Legal Evidence"@en .
 
 
+###  http://www.estrellaproject.org/lkif-core/legal-role.owl#Professional_Legal_Role
+lkiflegalrole:Professional_Legal_Role rdf:type owl:Class ;
+                                      rdfs:comment "From LKIF: A professional legal role is a legal profession of some person, examples: lawyer, judge etc."@en ;
+                                      rdfs:label "Legal Agent"@en .
+
+
 ###  http://www.estrellaproject.org/lkif-core/norm.owl#Code
 lkifnorm:Code rdf:type owl:Class ;
-              rdfs:subClassOf lkifnorm:Legal_Document ;
+              rdfs:subClassOf lkifnorm:Legal_Document ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty lkifmereo:part ;
+                                owl:someValuesFrom lkifnorm:Statute
+                              ] ;
               rdfs:comment "A code is a collection of statutes and laws organized in some fashion, such as by subject."@en .
 
 
 ###  http://www.estrellaproject.org/lkif-core/norm.owl#Legal_Document
 lkifnorm:Legal_Document rdf:type owl:Class ;
+                        rdfs:subClassOf [ rdf:type owl:Restriction ;
+                                          owl:onProperty :createdBy ;
+                                          owl:someValuesFrom lkiflegalrole:Professional_Legal_Role
+                                        ] ;
                         rdfs:comment "From LKIF: A subclass of a legal source."@en ,
                                      "The legality of a document is most likely related to the fact that a person of the law or legislative body prepared it for some legal purpose."@en .
 
 
 ###  http://www.estrellaproject.org/lkif-core/norm.owl#Statute
 lkifnorm:Statute rdf:type owl:Class ;
-                 rdfs:subClassOf lkifnorm:Legal_Document ;
+                 rdfs:subClassOf lkifnorm:Legal_Document ,
+                                 [ rdf:type owl:Restriction ;
+                                   owl:onProperty <http://www.essepuntato.it/2008/12/pattern#contains> ;
+                                   owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                   owl:onClass :CrimeClassification
+                                 ] ,
+                                 [ rdf:type owl:Restriction ;
+                                   owl:onProperty lkifmereo:part ;
+                                   owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                   owl:onClass :CrimeCode
+                                 ] ;
                  rdfs:comment "A statute is a formal written enactment of a legislative authority that governs a state, city or country. From LKIF: A statute bears one or more norms, all of which are uttered by some legal person. It cannot bear expressions which are uttered by a different kind of agent."@en .
-
-
-###  http://www.w3.org/2004/02/skos/core#Concept
-skos:Concept rdf:type owl:Class .
 
 
 ###  http://xmlns.com/foaf/0.1/Person
 foaf:Person rdf:type owl:Class ;
-            rdfs:comment "From FOAF: The Person class represents people. Something is a Person if it is a person. We don't nitpic about whether they're alive, dead, real, or imaginary. The Person class is a sub-class of the Agent class, since all people are considered 'agents' in FOAF."@en .
+            rdfs:comment "A person."@en .
 
 
 #################################################################
 #    Individuals
 #################################################################
 
-###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#ArrestRecord
-:ArrestRecord rdf:type owl:NamedIndividual .
-
-
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Complaint
 :Complaint rdf:type owl:NamedIndividual ,
-                    :ChargingDocument .
+                    lkiflaction:Artifact ;
+           rdfs:comment "A type of charging document that begins a criminal case; issued by a prosecutor."@en .
+
+
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Complaint_of_John_Doe
+:Complaint_of_John_Doe rdf:type owl:NamedIndividual ,
+                                lkiflaction:Artifact .
+
+
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Criminal_Record
+:Criminal_Record rdf:type owl:NamedIndividual ,
+                          lkiflaction:Artifact ,
+                          lkifexpression:Evidence .
 
 
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Felony
@@ -238,14 +354,22 @@ foaf:Person rdf:type owl:Class ;
                  :CrimeClassification .
 
 
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Formal_Charge_of_John_Doe
+:Formal_Charge_of_John_Doe rdf:type owl:NamedIndividual ,
+                                    :FormalCharge ;
+                           rdfs:comment "Test instance"@en .
+
+
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Indictment
 :Indictment rdf:type owl:NamedIndividual ,
-                     :ChargingDocument .
+                     lkiflaction:Artifact ;
+            rdfs:comment "A type of charging document that begins a criminal case; issued by a prosecutor."@en .
 
 
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Information
 :Information rdf:type owl:NamedIndividual ,
-                      :ChargingDocument .
+                      lkiflaction:Artifact ;
+             rdfs:comment "A type of charging document that begins a criminal case; issued by a prosecutor."@en .
 
 
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Infraction
@@ -253,29 +377,44 @@ foaf:Person rdf:type owl:Class ;
                      :CrimeClassification .
 
 
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#John_Doe
+:John_Doe rdf:type owl:NamedIndividual ,
+                   foaf:Person .
+
+
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Misdemeanor
 :Misdemeanor rdf:type owl:NamedIndividual ,
                       :CrimeClassification .
 
 
-###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Ordnance
-:Ordnance rdf:type owl:NamedIndividual .
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Police_Report
+:Police_Report rdf:type owl:NamedIndividual ,
+                        lkiflaction:Artifact ,
+                        lkifexpression:Evidence ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :createdBy ;
+                          owl:allValuesFrom :ArrestingOfficer
+                        ] ;
+               rdfs:comment "A police report is a document prepared by a police department representative after an alleged crime has occured. A report can contain information such as the location and date/time of the event, the offender and victim involved, any property impact, and the charge that was allegedly violated."@en .
 
 
-###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#PoliceReport
-:PoliceReport rdf:type owl:NamedIndividual .
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Sherry_Wong
+:Sherry_Wong rdf:type owl:NamedIndividual ,
+                      lkiflegalrole:Professional_Legal_Role ;
+             lkiflaction:actor :Formal_Charge_of_John_Doe .
 
 
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Wobbler
 :Wobbler rdf:type owl:NamedIndividual ,
-                  :CrimeClassification .
+                  :CrimeClassification ;
+         rdfs:comment "Classification of a statute that can be either a felony or misdemeanor."@en .
 
 
 #################################################################
 #    Annotations
 #################################################################
 
-:PoliceReport rdfs:comment "A police report is a document prepared by a police department representative after an alleged crime has occured. A report can contain information such as the location and date/time of the event, the offender and victim involved, any property impact, and the charge that was allegedly violated."@en .
+:Charged rdfs:comment "A person who is being charged by a legal agent."@en .
 
 
 ###  Generated by the OWL API (version 4.2.8.20170104-2310) https://github.com/owlcs/owlapi
