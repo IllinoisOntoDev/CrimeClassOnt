@@ -35,11 +35,11 @@
 #    Object Properties
 #################################################################
 
-###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#charged
-:charged rdf:type owl:ObjectProperty ;
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#charges
+:charges rdf:type owl:ObjectProperty ;
          owl:inverseOf :isChargedBy ;
          rdfs:domain lkiflegalrole:Professional_Legal_Role ;
-         rdfs:range :Charged ;
+         rdfs:range foaf:Person ;
          rdfs:comment "A legal agent can have the ability to charge an offender with a crime."@en .
 
 
@@ -48,6 +48,10 @@
            owl:inverseOf :creates ;
            rdfs:domain lkifnorm:Legal_Document ;
            rdfs:range lkiflegalrole:Professional_Legal_Role ;
+           owl:propertyChainAxiom ( [ owl:inverseOf :hasArtifact
+                                    ]
+                                    :hasActor
+                                  ) ;
            rdfs:comment "Links an author/creator of a document to the document the person has created."@en .
 
 
@@ -66,7 +70,21 @@
 :hasArtifact rdf:type owl:ObjectProperty ;
              rdfs:domain lkiflaction:Action ;
              rdfs:range lkifnorm:Legal_Document ;
-             rdfs:comment "Connects an action with the physical artifact that is produced in the course of the action."@en .
+             rdfs:comment "Connects an action with the physical artifact that is produced in the course of the action."@en ;
+             rdfs:label "recordedIn"@en .
+
+
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#hasClassification
+:hasClassification rdf:type owl:ObjectProperty ;
+                   rdfs:domain lkifnorm:Statute ;
+                   rdfs:range :CrimeClassification .
+
+
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#hasLawViolation
+:hasLawViolation rdf:type owl:ObjectProperty ;
+                 owl:inverseOf :lawViolationIn ;
+                 rdfs:domain :Charge ;
+                 rdfs:range lkifnorm:Statute .
 
 
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#hasRecipient
@@ -82,6 +100,20 @@
              rdfs:range lkiflegalrole:Professional_Legal_Role .
 
 
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#isChargedWith
+:isChargedWith rdf:type owl:ObjectProperty ;
+               rdfs:domain :ChargedPerson ;
+               owl:propertyChainAxiom ( :isChargedWith
+                                        :hasClassification
+                                      ) ,
+                                      ( :isChargedWith
+                                        <http://www.essepuntato.it/2008/12/pattern#contains>
+                                      ) ,
+                                      ( :receives
+                                        :hasLawViolation
+                                      ) .
+
+
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#isSupportedBy
 :isSupportedBy rdf:type owl:ObjectProperty ;
                owl:inverseOf :supports ;
@@ -89,9 +121,13 @@
                rdfs:range lkifexpression:Evidence .
 
 
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#lawViolationIn
+:lawViolationIn rdf:type owl:ObjectProperty .
+
+
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#receives
 :receives rdf:type owl:ObjectProperty ;
-          rdfs:domain :Charged ;
+          rdfs:domain :ChargedPerson ;
           rdfs:range lkiflaction:Action .
 
 
@@ -106,12 +142,13 @@
 <http://www.essepuntato.it/2008/12/pattern#contains> rdf:type owl:ObjectProperty ;
                                                      owl:inverseOf <http://www.essepuntato.it/2008/12/pattern#isContainedBy> ;
                                                      rdfs:domain lkifnorm:Statute ;
-                                                     rdfs:range :CrimeClassification ;
+                                                     rdfs:range :Statute_Information ;
                                                      rdfs:comment "Refers to a particular section within a document. Not necessarily part-whole relationship."@en .
 
 
 ###  http://www.essepuntato.it/2008/12/pattern#isContainedBy
-<http://www.essepuntato.it/2008/12/pattern#isContainedBy> rdf:type owl:ObjectProperty .
+<http://www.essepuntato.it/2008/12/pattern#isContainedBy> rdf:type owl:ObjectProperty ;
+                                                          rdfs:label "isContainedIn"@en .
 
 
 ###  http://www.estrellaproject.org/lkif-core/action.owl#actor
@@ -139,6 +176,14 @@ lkifmereo:part_of rdf:type owl:ObjectProperty ;
 foaf:topic rdf:type owl:ObjectProperty ;
            rdfs:domain lkifnorm:Legal_Document ;
            rdfs:range owl:Thing ;
+           owl:propertyChainAxiom ( [ owl:inverseOf :hasArtifact
+                                    ]
+                                    :hasLawViolation
+                                  ) ,
+                                  ( [ owl:inverseOf :hasArtifact
+                                    ]
+                                    :hasRecipient
+                                  ) ;
            rdfs:comment "Connects a legal document with any significant content within the document."@en ;
            rdfs:label "hasTopic"@en .
 
@@ -171,6 +216,10 @@ foaf:topic rdf:type owl:ObjectProperty ;
                           owl:someValuesFrom lkiflaction:Artifact
                         ] ,
                         [ rdf:type owl:Restriction ;
+                          owl:onProperty :hasLawViolation ;
+                          owl:someValuesFrom lkifnorm:Statute
+                        ] ,
+                        [ rdf:type owl:Restriction ;
                           owl:onProperty :hasActor ;
                           owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                           owl:onClass lkiflegalrole:Professional_Legal_Role
@@ -178,23 +227,27 @@ foaf:topic rdf:type owl:ObjectProperty ;
                         [ rdf:type owl:Restriction ;
                           owl:onProperty :hasRecipient ;
                           owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
-                          owl:onClass :Charged
+                          owl:onClass :ChargedPerson
                         ] ;
         rdfs:comment "An accusation of crime."@en .
 
 
-###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Charged
-:Charged rdf:type owl:Class ;
-         rdfs:subClassOf foaf:Person ,
-                         [ rdf:type owl:Restriction ;
-                           owl:onProperty :isChargedBy ;
-                           owl:someValuesFrom lkiflegalrole:Professional_Legal_Role
-                         ] ,
-                         [ rdf:type owl:Restriction ;
-                           owl:onProperty :receives ;
-                           owl:someValuesFrom :Charge
-                         ] ;
-         rdfs:comment "A person who is being charged by a legal agent."@en .
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#ChargedPerson
+:ChargedPerson rdf:type owl:Class ;
+               rdfs:subClassOf foaf:Person ,
+                               [ rdf:type owl:Restriction ;
+                                 owl:onProperty :isChargedBy ;
+                                 owl:someValuesFrom lkiflegalrole:Professional_Legal_Role
+                               ] ,
+                               [ rdf:type owl:Restriction ;
+                                 owl:onProperty :isChargedWith ;
+                                 owl:someValuesFrom lkifnorm:Statute
+                               ] ,
+                               [ rdf:type owl:Restriction ;
+                                 owl:onProperty :receives ;
+                                 owl:someValuesFrom :Charge
+                               ] ;
+               rdfs:comment "A person who is being charged by a legal agent."@en .
 
 
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Complaint
@@ -218,11 +271,7 @@ foaf:topic rdf:type owl:ObjectProperty ;
 
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#CrimeClassification
 :CrimeClassification rdf:type owl:Class ;
-                     rdfs:subClassOf :Statute_Information ,
-                                     [ rdf:type owl:Restriction ;
-                                       owl:onProperty lkifmereo:part_of ;
-                                       owl:someValuesFrom lkifnorm:Statute
-                                     ] ;
+                     rdfs:subClassOf :Statute_Information ;
                      rdfs:comment "Categorization of crimes into misdemeanors, felonies, infractions, and wobblers."@en .
 
 
@@ -308,14 +357,6 @@ lkiflaction:Artifact rdf:type owl:Class ;
                                      [ rdf:type owl:Restriction ;
                                        owl:onProperty :isSupportedBy ;
                                        owl:someValuesFrom lkifexpression:Evidence
-                                     ] ,
-                                     [ rdf:type owl:Restriction ;
-                                       owl:onProperty foaf:topic ;
-                                       owl:someValuesFrom :Charged
-                                     ] ,
-                                     [ rdf:type owl:Restriction ;
-                                       owl:onProperty foaf:topic ;
-                                       owl:someValuesFrom lkifnorm:Statute
                                      ] ;
                      rdfs:comment """From LKIF: A physical object created by some person to fulfil a particular purpose.
 
@@ -368,7 +409,7 @@ lkifnorm:Statute rdf:type owl:Class ;
                                    owl:onClass :CrimeClassification
                                  ] ,
                                  [ rdf:type owl:Restriction ;
-                                   owl:onProperty lkifmereo:part ;
+                                   owl:onProperty <http://www.essepuntato.it/2008/12/pattern#contains> ;
                                    owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                                    owl:onClass :CrimeCode
                                  ] ;
@@ -401,17 +442,17 @@ foaf:Person rdf:type owl:Class ;
 
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Formal_Charge_of_John_Doe
 :Formal_Charge_of_John_Doe rdf:type owl:NamedIndividual ,
-                                    :FormalCharge ;
+                                    :Charge ;
+                           :hasArtifact :Complaint_of_John_Doe ;
+                           :hasLawViolation <http://purl.org/lis590OD/Fall17/CrimeChargeOnt#720-5/16-1> ;
+                           :hasRecipient :John_Doe ;
                            rdfs:comment "Test instance"@en .
 
 
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Illinois_Compiled_Statutes
 :Illinois_Compiled_Statutes rdf:type owl:NamedIndividual ,
-                                     lkifnorm:Code .
-
-
-###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Illinois_General_Assembly
-:Illinois_General_Assembly rdf:type owl:NamedIndividual .
+                                     lkifnorm:Code ;
+                            lkifmereo:part <http://purl.org/lis590OD/Fall17/CrimeChargeOnt#720-5/16-1> .
 
 
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Infraction
@@ -431,6 +472,7 @@ foaf:Person rdf:type owl:Class ;
 
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Sherry_Wong
 :Sherry_Wong rdf:type owl:NamedIndividual ,
+                      :Prosecutor ,
                       lkiflegalrole:Professional_Legal_Role ;
              lkiflaction:actor :Formal_Charge_of_John_Doe .
 
@@ -443,7 +485,9 @@ foaf:Person rdf:type owl:Class ;
 
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#720-5/16-1
 <http://purl.org/lis590OD/Fall17/CrimeChargeOnt#720-5/16-1> rdf:type owl:NamedIndividual ,
-                                                                     lkifnorm:Statute .
+                                                                     lkifnorm:Statute ;
+                                                            :hasClassification :Wobbler ;
+                                                            <http://www.essepuntato.it/2008/12/pattern#contains> :Criminal_Damage_to_Property .
 
 
 ###  Generated by the OWL API (version 4.2.8.20170104-2310) https://github.com/owlcs/owlapi
