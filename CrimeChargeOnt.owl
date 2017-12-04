@@ -29,7 +29,8 @@
 @prefix lkifexpression: <http://www.estrellaproject.org/lkif-core/expression.owl#> .
 @base <http://purl.org/lis590OD/Fall17/CrimeChargeOnt> .
 
-<http://purl.org/lis590OD/Fall17/CrimeChargeOnt> rdf:type owl:Ontology .
+<http://purl.org/lis590OD/Fall17/CrimeChargeOnt> rdf:type owl:Ontology ;
+                                                  owl:imports <http://purl.org/lis590OD/Fall17/BailOnt> .
 
 #################################################################
 #    Object Properties
@@ -191,6 +192,14 @@ foaf:topic rdf:type owl:ObjectProperty ;
 #################################################################
 #    Classes
 #################################################################
+
+###  http://purl.org/lis590OD/Fall17/BailOnt#Defendant
+<http://purl.org/lis590OD/Fall17/BailOnt#Defendant> owl:equivalentClass :ChargedPerson .
+
+
+###  http://purl.org/lis590OD/Fall17/BailOnt#Judge
+<http://purl.org/lis590OD/Fall17/BailOnt#Judge> owl:equivalentClass :Judge .
+
 
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#ArrestingCharge
 :ArrestingCharge rdf:type owl:Class ;
@@ -376,6 +385,7 @@ lkifexpression:Evidence rdf:type owl:Class ;
 
 ###  http://www.estrellaproject.org/lkif-core/legal-role.owl#Professional_Legal_Role
 lkiflegalrole:Professional_Legal_Role rdf:type owl:Class ;
+                                      rdfs:subClassOf foaf:Person ;
                                       rdfs:comment "From LKIF: A professional legal role is a legal profession of some person, examples: lawyer, judge etc."@en ;
                                       rdfs:label "Legal Agent"@en .
 
