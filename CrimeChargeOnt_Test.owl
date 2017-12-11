@@ -60,14 +60,12 @@
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#creates
 :creates rdf:type owl:ObjectProperty ;
          rdfs:domain lkiflegalrole:Professional_Legal_Role ;
-         rdfs:range lkifnorm:Legal_Document ;
-         rdfs:comment "A legal person can create a legal document."@en .
+         rdfs:range lkifnorm:Legal_Document .
 
 
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#hasActor
 :hasActor rdf:type owl:ObjectProperty ;
-          owl:inverseOf lkiflaction:actor ;
-          rdfs:comment "A charge action can have an actor who is the agent in the charge action. Usually a legal professional."@en .
+          owl:inverseOf lkiflaction:actor .
 
 
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#hasArtifact
@@ -81,24 +79,21 @@
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#hasClassification
 :hasClassification rdf:type owl:ObjectProperty ;
                    rdfs:domain lkifnorm:Statute ;
-                   rdfs:range :CrimeClassification ;
-                   rdfs:comment "A statute will have information about the classification - felony, misdemeanor, infraction, or wobbler - stated within the text of the statute."@en .
+                   rdfs:range :CrimeClassification .
 
 
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#hasLawViolation
 :hasLawViolation rdf:type owl:ObjectProperty ;
                  owl:inverseOf :lawViolationIn ;
                  rdfs:domain :Charge ;
-                 rdfs:range lkifnorm:Statute ;
-                 rdfs:comment "A charge action typically includes a legal professional stating that a charged person has violated some law or statute."@en .
+                 rdfs:range lkifnorm:Statute .
 
 
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#hasRecipient
 :hasRecipient rdf:type owl:ObjectProperty ;
               owl:inverseOf :receives ;
               rdfs:domain lkiflaction:Action ;
-              rdfs:range foaf:Person ;
-              rdfs:comment "A charge action has a person who receives a charge by a legal professional."@en .
+              rdfs:range foaf:Person .
 
 
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#isChargedBy
@@ -134,7 +129,6 @@
 
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#receives
 :receives rdf:type owl:ObjectProperty ;
-          rdfs:subPropertyOf :hasArtifact ;
           rdfs:domain :ChargedPerson ;
           rdfs:range lkiflaction:Action .
 
@@ -454,9 +448,34 @@ foaf:Person rdf:type owl:Class ;
 #    Individuals
 #################################################################
 
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Complaint_of_John_Doe
+:Complaint_of_John_Doe rdf:type owl:NamedIndividual ,
+                                lkiflaction:Artifact .
+
+
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Criminal_Damage_to_Property
+:Criminal_Damage_to_Property rdf:type owl:NamedIndividual ,
+                                      :CrimeCode .
+
+
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Felony
 :Felony rdf:type owl:NamedIndividual ,
                  :CrimeClassification .
+
+
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Formal_Charge_of_John_Doe
+:Formal_Charge_of_John_Doe rdf:type owl:NamedIndividual ,
+                                    :Charge ;
+                           :hasArtifact :Complaint_of_John_Doe ;
+                           :hasLawViolation <http://purl.org/lis590OD/Fall17/CrimeChargeOnt#720-5/16-1> ;
+                           :hasRecipient :John_Doe ;
+                           rdfs:comment "Test instance"@en .
+
+
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Illinois_Compiled_Statutes
+:Illinois_Compiled_Statutes rdf:type owl:NamedIndividual ,
+                                     lkifnorm:Code ;
+                            lkifmereo:part <http://purl.org/lis590OD/Fall17/CrimeChargeOnt#720-5/16-1> .
 
 
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Infraction
@@ -464,15 +483,34 @@ foaf:Person rdf:type owl:Class ;
                      :CrimeClassification .
 
 
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#John_Doe
+:John_Doe rdf:type owl:NamedIndividual ,
+                   foaf:Person .
+
+
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Misdemeanor
 :Misdemeanor rdf:type owl:NamedIndividual ,
                       :CrimeClassification .
+
+
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Sherry_Wong
+:Sherry_Wong rdf:type owl:NamedIndividual ,
+                      :Prosecutor ,
+                      lkiflegalrole:Professional_Legal_Role ;
+             lkiflaction:actor :Formal_Charge_of_John_Doe .
 
 
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#Wobbler
 :Wobbler rdf:type owl:NamedIndividual ,
                   :CrimeClassification ;
          rdfs:comment "Classification of a statute that can be either a felony or misdemeanor."@en .
+
+
+###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#720-5/16-1
+<http://purl.org/lis590OD/Fall17/CrimeChargeOnt#720-5/16-1> rdf:type owl:NamedIndividual ,
+                                                                     lkifnorm:Statute ;
+                                                            :hasClassification :Wobbler ;
+                                                            <http://www.essepuntato.it/2008/12/pattern#contains> :Criminal_Damage_to_Property .
 
 
 ###  Generated by the OWL API (version 4.2.8.20170104-2310) https://github.com/owlcs/owlapi
