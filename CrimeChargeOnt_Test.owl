@@ -31,7 +31,9 @@
 @prefix lkifexpression: <http://www.estrellaproject.org/lkif-core/expression.owl#> .
 @base <http://purl.org/lis590OD/Fall17/CrimeChargeOnt> .
 
-<http://purl.org/lis590OD/Fall17/CrimeChargeOnt> rdf:type owl:Ontology .
+<http://purl.org/lis590OD/Fall17/CrimeChargeOnt> rdf:type owl:Ontology ;
+                                                  owl:imports <http://purl.org/lis590OD/Fall17/BailOnt> ,
+                                                              <http://purl.org/lis590OD/Fall17/JailProgramOnt> .
 
 #################################################################
 #    Object Properties

@@ -202,12 +202,14 @@ foaf:topic rdf:type owl:ObjectProperty ;
 
 ###  http://purl.org/lis590OD/Fall17/BailOnt#Defendant
 bail:Defendant rdf:type owl:Class ;
-               owl:equivalentClass :ChargedPerson .
+               owl:equivalentClass :ChargedPerson ;
+               rdfs:subClassOf foaf:Person .
 
 
 ###  http://purl.org/lis590OD/Fall17/BailOnt#Judge
 bail:Judge rdf:type owl:Class ;
-           owl:equivalentClass :Judge .
+           owl:equivalentClass :Judge ;
+           rdfs:subClassOf lkiflegalrole:Professional_Legal_Role .
 
 
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#ArrestingCharge
@@ -252,7 +254,6 @@ bail:Judge rdf:type owl:Class ;
 
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#ChargedPerson
 :ChargedPerson rdf:type owl:Class ;
-               owl:equivalentClass jailprog:JailInmate ;
                rdfs:subClassOf foaf:Person ,
                                [ rdf:type owl:Restriction ;
                                  owl:onProperty :isChargedBy ;
@@ -306,7 +307,8 @@ bail:Judge rdf:type owl:Class ;
 
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#CriminalRecord
 :CriminalRecord rdf:type owl:Class ;
-                rdfs:subClassOf lkifnorm:Legal_Document .
+                rdfs:subClassOf lkifnorm:Legal_Document ;
+                rdfs:comment "A criminal record is a record of a person's criminal history"@en .
 
 
 ###  http://purl.org/lis590OD/Fall17/CrimeChargeOnt#FormalCharge
@@ -365,7 +367,8 @@ bail:Judge rdf:type owl:Class ;
 
 
 ###  http://purl.org/lis590OD/Fall17/JailProgramOnt#JailInmate
-jailprog:JailInmate rdf:type owl:Class .
+jailprog:JailInmate rdf:type owl:Class ;
+                    rdfs:subClassOf :ChargedPerson .
 
 
 ###  http://www.estrellaproject.org/lkif-core/action.owl#Action
